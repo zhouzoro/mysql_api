@@ -1,0 +1,19 @@
+if data && data[0]
+	-var doc = data[0]
+	.title.header.table-header
+		i.icon.dropdown
+		label= doc["项目名称"]
+	.content
+		a.edit-project(title='编辑项目信息' data-id= doc.id)
+			i.fa.fa-edit
+			span 编辑
+		table.ui.celled.table
+			tbody
+				each val, key in doc
+					if key !=='init_date' && key !=='id' && key !=='项目名称'
+						tr
+							td
+								a.cursor-pointer(onclick="$('.title.item.statistic[data-type="+key+"]').click()")
+									i.icon.bar.chart
+									span= key
+							td.display= val

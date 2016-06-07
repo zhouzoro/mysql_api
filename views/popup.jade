@@ -1,0 +1,282 @@
+.popup-content-custom
+	//each val, key in data
+		.field= key
+			a.value= val
+	a.ui.button.small.basic.blue.edit(onclick='startEdit()') 编辑数据
+	a.ui.button.small.basic.blue.cancel.hidden.in-edit(onclick='cancelEdit()') 取消
+	a.ui.button.small.basic.blue.submit.hidden.in-edit(onclick='submitEdit()' data-id=data.id ) 保存
+	form
+		table.ui.celled.table
+			tbody
+				tr
+					td
+						a.cursor-pointer(data-type="用海一级类")
+							i.icon.bar.chart
+							span 用海一级类
+					td.display= data["用海一级类"]
+					td.input.hidden
+						.ui.input.small
+							input(type='text' name="用海一级类" value= data["用海一级类"])= data["用海一级类"]
+				tr
+					td
+						a.cursor-pointer(data-type="用海二级类")
+							i.icon.bar.chart
+							span 用海二级类
+					td.display= data["用海二级类"]
+					td.input.hidden
+						.ui.input.small
+							input(type='text' name="用海二级类" value= data["用海二级类"])= data["用海二级类"]
+				tr
+					td
+						a.cursor-pointer(data-type="用海方式")
+							i.icon.bar.chart
+							span 用海方式
+					td.display= data["用海方式"]
+					td.input.hidden
+						.ui.input.small
+							input(type='text' name="用海方式" value= data["用海方式"])= data["用海方式"]
+				tr
+					td
+						a.cursor-pointer(data-type="进展情况")
+							i.icon.bar.chart
+							span 项目进展情况
+					td.display= data["进展情况"]
+					td.input.hidden
+						select.ui.dropdown.small(name="进展情况")
+							option(value='开工' selected= data["进展情况"]=='开工'?"selected":false) 开工
+							option(value='竣工' selected= data["进展情况"]=='竣工'?"selected":false) 竣工
+							option(value='验收' selected= data["进展情况"]=='验收'?"selected":false) 验收
+				tr
+					td
+						a.cursor-pointer(data-type="填海情况")
+							i.icon.bar.chart
+							span 填海情况
+					td.display= data["填海情况"]
+					td.input.hidden
+						select.ui.dropdown.small(name="填海情况")
+							option(value='填海' selected= data["填海情况"]=='填海'?"selected":false) 填海
+							option(value='无填海' selected= data["填海情况"]=='无填海'?"selected":false) 无填海
+				tr
+					td
+						a.cursor-pointer(data-type="填海超面积情况")
+							i.icon.bar.chart
+							span 填海超面积情况
+					td.display= data["填海超面积情况"]
+					td.input.hidden
+						select.ui.dropdown.small(name="填海超面积情况")
+							option(value='正常' selected= data["填海超面积情况"]=='正常'?"selected":false) 正常
+							option(value='超面积' selected= data["填海超面积情况"]=='超面积'?"selected":false) 超面积
+				tr
+					td
+						a.cursor-pointer(data-type="海域使用上报情况")
+							i.icon.bar.chart
+							span 海域使用上报情况
+					td.display= data["海域使用上报情况"]
+					td.input.hidden
+						select.ui.dropdown.small(name="海域使用上报情况")
+							option(value='已上报' selected= data["海域使用上报情况"]=='已上报'?"selected":false) 已上报
+							option(value='上报预警' selected= data["海域使用上报情况"]=='上报预警'?"selected":false) 上报预警
+							option(value='上报报警' selected= data["海域使用上报情况"]=='上报报警'?"selected":false) 上报报警
+				tr
+					td
+						a.cursor-pointer(data-type="动态监测情况")
+							i.icon.bar.chart
+							span 动态监测情况
+					td.display= data["动态监测情况"]
+					td.input.hidden
+						select.ui.dropdown.small(name="动态监测情况")
+							option(value='未监测' selected= data["动态监测情况"]=='未监测'?"selected":false) 未监测
+							option(value='已监测' selected= data["动态监测情况"]=='已监测'?"selected":false) 已监测
+				tr
+					td
+						a.cursor-pointer(data-type="违法情况")
+							i.icon.bar.chart
+							span 违法情况
+					td.display= data["违法情况"]
+					td.input.hidden
+						select.ui.dropdown.small(name="违法情况")
+							option(value='违法' selected= data["违法情况"]=='违法'?"selected":false) 违法
+							option(value='合法' selected= data["违法情况"]=='合法'?"selected":false) 合法
+				tr
+					td
+						a.cursor-pointer(data-type="用海调整情况")
+							i.icon.bar.chart
+							span 用海调整情况
+					td.display= data["用海调整情况"]
+					td.input.hidden
+						select.ui.dropdown.small(name="用海调整情况")
+							option(value='无调整' selected= data["用海调整情况"]=='无调整'?"selected":false) 无调整
+							option(value='有调整' selected= data["用海调整情况"]=='有调整'?"selected":false) 有调整
+				tr
+					td
+						a.cursor-pointer(data-type="调整上报情况")
+							i.icon.bar.chart
+							span 调整上报情况
+					td.display= data["调整上报情况"]
+					td.input.hidden
+						select.ui.dropdown.small(name="调整上报情况")
+							option(value='已上报' selected= data["调整上报情况"]=='已上报'?"selected":false) 已上报
+							option(value='未上报' selected= data["调整上报情况"]=='未上报'?"selected":false) 未上报
+				tr
+					td
+						a.cursor-pointer(data-type="调整上报审批情况")
+							i.icon.bar.chart
+							span 调整上报审批情况
+					td.display= data["调整上报审批情况"]
+					td.input.hidden
+						select.ui.dropdown.small(name="调整上报审批情况")
+							option(value='已通过' selected= data["调整上报审批情况"]=='已上报'?"selected":false) 已通过
+							option(value='未通过' selected= data["调整上报审批情况"]=='未上报'?"selected":false) 未通过
+				tr
+					td
+						a.cursor-pointer(data-type="确权发证情况")
+							i.icon.bar.chart
+							span 确权发证情况
+					td.display= data["确权发证情况"]
+					td.input.hidden
+						select.ui.dropdown.small(name="确权发证情况")
+							option(value='已发证' selected= data["确权发证情况"]=='已上报'?"selected":false) 已发证
+							option(value='未发证' selected= data["确权发证情况"]=='未上报'?"selected":false) 未发证
+				tr
+					td
+						a.cursor-pointer(data-type="受益方上报情况")
+							i.icon.bar.chart
+							span 受益方上报情况
+					td.display= data["受益方上报情况"]
+					td.input.hidden
+						select.ui.dropdown.small(name="受益方上报情况")
+							option(value='已上报' selected= data["受益方上报情况"]=='已上报'?"selected":false) 已上报
+							option(value='未上报' selected= data["受益方上报情况"]=='未上报'?"selected":false) 未上报
+				tr
+					td
+						a.cursor-pointer(data-type="受益方上报审批情况")
+							i.icon.bar.chart
+							span 受益方上报审批情况
+					td.display= data["受益方上报审批情况"]
+					td.input.hidden
+						select.ui.dropdown.small(name="受益方上报审批情况")
+							option(value='已通过' selected= data["受益方上报审批情况"]=='已上报'?"selected":false) 已通过
+							option(value='未通过' selected= data["受益方上报审批情况"]=='未上报'?"selected":false) 未通过
+	//table.ui.celled.table.hidden
+		tbody
+			tr
+				td
+					a.cursor-pointer(data-type="用海一级类")
+						i.icon.bar.chart
+						span 用海一级类
+				td= data["用海一级类"]
+			tr
+				td
+					a.cursor-pointer(data-type="用海二级类")
+						i.icon.bar.chart
+						span 用海二级类
+				td= data["用海二级类"]
+			tr
+				td
+					a.cursor-pointer(data-type="用海方式")
+						i.icon.bar.chart
+						span 用海方式
+				td= data["用海方式"]
+			tr
+				td
+					a.cursor-pointer(data-type="进展情况")
+						i.icon.bar.chart
+						span 项目进展情况
+				td= data["进展情况"]
+			tr
+				td
+					a.cursor-pointer(data-type="填海情况")
+						i.icon.bar.chart
+						span 填海情况
+				td= data["填海情况"]
+			tr
+				td
+					a.cursor-pointer(data-type="填海超面积情况")
+						i.icon.bar.chart
+						span 填海超面积情况
+				td= data["填海超面积情况"]
+			tr
+				td
+					a.cursor-pointer(data-type="海域使用上报情况")
+						i.icon.bar.chart
+						span 海域使用上报情况
+				td= data["海域使用上报情况"]
+			tr
+				td
+					a.cursor-pointer(data-type="动态监测情况")
+						i.icon.bar.chart
+						span 动态监测情况
+				td= data["动态监测情况"]
+			tr
+				td
+					a.cursor-pointer(data-type="违法情况")
+						i.icon.bar.chart
+						span 违法情况
+				td= data["违法情况"]
+			tr
+				td
+					a.cursor-pointer(data-type="用海调整情况")
+						i.icon.bar.chart
+						span 用海调整情况
+				td= data["用海调整情况"]
+			tr
+				td
+					a.cursor-pointer(data-type="调整上报情况")
+						i.icon.bar.chart
+						span 调整上报情况
+				td= data["调整上报情况"]
+			tr
+				td
+					a.cursor-pointer(data-type="调整上报审批情况")
+						i.icon.bar.chart
+						span 调整上报审批情况
+				td= data["调整上报审批情况"]
+			tr
+				td
+					a.cursor-pointer(data-type="确权发证情况")
+						i.icon.bar.chart
+						span 确权发证情况
+				td= data["确权发证情况"]
+			tr
+				td
+					a.cursor-pointer(data-type="受益方上报情况")
+						i.icon.bar.chart
+						span 受益方上报情况
+				td= data["受益方上报情况"]
+			tr
+				td
+					a.cursor-pointer(data-type="受益方上报审批情况")
+						i.icon.bar.chart
+						span 受益方上报审批情况
+				td= data["受益方上报审批情况"]
+//
+	.field 用海一级类:
+		a.value= data["用海一级类"]
+	.field 用海二级类:
+		a.value= data["用海二级类"]
+	.field 用海方式:
+		a.value= data["用海方式"]
+	.field 项目进展情况:
+		a.value= data["项目进展情况"]
+	.field 填海情况:
+		a.value= data["填海情况"]
+	.field 填海超面积情况:
+		a.value= data["填海超面积情况"]
+	.field 海域使用上报情况:
+		a.value= data["海域使用上报情况"]
+	.field 动态监测情况:
+		a.value= data["动态监测情况"]
+	.field 违法情况:
+		a.value= data["违法情况"]
+	.field 用海调整情况:
+		a.value= data["用海调整情况"]
+	.field 调整上报情况:
+		a.value= data["调整上报情况"]
+	.field 调整上报审批情况:
+		a.value= data["调整上报审批情况"]
+	.field 确权发证情况:
+		a.value= data["确权发证情况"]
+	.field 受益方上报情况:
+		a.value= data["受益方上报情况"]
+	.field 受益方上报审批情况:
+		a.value= data["受益方上报审批情况"]

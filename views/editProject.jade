@@ -1,0 +1,21 @@
+-var dd={'项目进展情况':['开工','竣工','验收'],'填海情况':['填海','未填海'],'填海超面积情况':['正常','超面积'],'海域使用上报情况':['已上报','未上报'],'动态监测情况':['已监测','未监测'],'违法情况':['合法','违法'],'用海调整情况':['有调整','无调整'],'调整上报情况':['已上报','未上报'],'调整上报审批情况':['已通过','未通过'],'确权发证情况':['已发证','未发证'],'受益方上报情况':['已上报','未上报'],'受益方上报审批情况':['已通过','未通过']}
+if data && data[0]
+	-var doc = data[0]
+	form.project
+		.save-project.ui.button.basic.labeled.green 保存
+			i.icon.save
+		.delete-project.ui.button.basic.labeled.red(data-href='/delete_project?id='+doc.id onclick='deleteProject()') 删除
+			i.icon.delete
+		input.hidden(name='id' value=doc.id)
+		table.ui.celled.table
+			tbody
+				tr
+					td 项目名称
+					td= doc["项目名称"]
+				each val, key in dd
+						tr
+							td= key
+							td
+								select.ui.dropdown.small(name=key)
+									each val2, index in val
+										option(value= val2 selection= val2==doc[key] ? true : false)= val2
