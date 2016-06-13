@@ -2,11 +2,12 @@
 if data && data[0]
 	-var doc = data[0]
 	form.project
-		.save-project.ui.button.basic.labeled.green 保存
+		a.save-project.ui.button.basic.small.green(data-id= doc.id)
 			i.icon.save
-		.delete-project.ui.button.basic.labeled.red(data-href='/delete_project?id='+doc.id onclick='deleteProject()') 删除
+			span 保存
+		a.delete-project.ui.button.basic.small.red(data-href='/delete_project?id='+doc.id onclick='deleteProject()')
 			i.icon.delete
-		input.hidden(name='id' value=doc.id)
+			span 删除
 		table.ui.celled.table
 			tbody
 				tr

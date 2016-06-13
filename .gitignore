@@ -2,8 +2,7 @@
 /node_modules
 /custerr
 /wwwroot/arcgis_js_api
-/public/storage
-/public/csv
+/public
 Homestead.yaml
 Homestead.json
 .env

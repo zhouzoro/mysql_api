@@ -4,8 +4,8 @@ if data && data[0]
 		i.icon.dropdown
 		label= doc["项目名称"]
 	.content
-		a.edit-project(title='编辑项目信息' data-id= doc.id)
-			i.fa.fa-edit
+		a.edit-project.ui.button.basic.small.orange(title='编辑项目信息' data-id= doc.id)
+			i.icon.edit
 			span 编辑
 		table.ui.celled.table
 			tbody
@@ -17,3 +17,5 @@ if data && data[0]
 									i.icon.bar.chart
 									span= key
 							td.display= val
+								if val=="已发证"
+									a.cert-download(href='/files/certificate.zip' download='证书'+doc.id) 证书下载

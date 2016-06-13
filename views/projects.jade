@@ -7,12 +7,9 @@ if data && data[0]
 						i.icon.dropdown
 						label= doc["项目名称"]
 					.content
-						a.enlarge(title='expand')
+						a.enlarge(title='expand' data-id=doc.id)
 							i.fa.fa-expand
 							span 全屏查看
-						a.edit-project(title='编辑项目信息' data-id= doc.id)
-							i.fa.fa-edit
-							span 编辑
 						table.ui.celled.table
 							tbody
 								each val, key in doc
@@ -23,3 +20,5 @@ if data && data[0]
 													i.icon.bar.chart
 													span= key
 											td.display= val
+												if val=="已发证"
+													a.cert-download(href='/files/certificate.zip' download='证书'+doc.id) 证书下载

@@ -56,12 +56,9 @@ router.get('/zone_count?', function(req, res) {
 });
 
 router.get('/project?', function(req, res) {
-
     var qstr = "SELECT * FROM gis1.projects where id = " + req.query.id;
     connection.query(qstr, function(err, rows) {
-        if (err) {
-            console.log(err);
-        }
+        if (err) console.log(err);
         res.render('project', { data: rows });
     });
 });
@@ -80,29 +77,23 @@ router.get('/get_projects?', function(req, res) {
 });
 
 router.get('/edit_project?', function(req, res) {
-
     var qstr = "SELECT * FROM gis1.projects where `id` = " + req.query.id;
-
     connection.query(qstr, function(err, rows) {
-        if (err) {
-            console.log(err);
-        }
+        if (err) console.log(err);
         res.render('editProject', { data: rows });
     });
 });
 
 router.get('/delete_project?', function(req, res) {
-
     var qstr = "delete FROM gis1.projects where `id` = " + req.query.id;
 
     connection.query(qstr, function(err, rows) {
-        if (err) {
-            console.log(err);
-        }
+        if (err) console.log(err);
         res.send({ ok: 1 });
     });
 });
-router.post('/edit_project', function(req, res) {
+
+router.post('/edit_project？', function(req, res) {
 
     var qstr = "update gis1.projects set";
     for (let key in req.body) {
@@ -110,15 +101,68 @@ router.post('/edit_project', function(req, res) {
             qstr = qstr + " `" + key + "` = '" + req.body[key] + "',"
         }
     }
-    qstr = qstr.substring(0, qstr.lastIndexOf(",")) + "where `id` = " + req.body.id;
+    qstr = qstr.substring(0, qstr.lastIndexOf(",")) + "where `id` = " + req.query.id;
+
     connection.query(qstr, function(err, rows) {
-        if (err) {
-            console.log(err);
-        }
+        if (err) console.log(err);
         res.send({ ok: 1, id: req.body.id })
     });
 });
 
+router.get('/get_stacked_data?', function(req, res) {
+    getStackedData(req.query.field1, req.query.field2, req.query.tb).then(function(result) {
+        res.send(result);
+    })
+});
+
+function getStackedData(field1, field2, tb) {
+    var result = {};
+    var qstr = 'SELECT `' + field1 + '` as label FROM gis1.' + tb + ' group by `' + field1 + '`';
+    var qstr2 = 'SELECT `' + field2 + '` as label FROM gis1.' + tb + ' group by `' + field2 + '`';
+    console.log(qstr);
+
+    console.log(qstr2);
+    return Promise.all([queryAsync(qstr),queryAsync(qstr2)]).then(function(rows) {
+        result = {
+            "categories": [{
+                "category": rows[0]
+            }],
+            "dataset": []
+        };
+        var seriesPromises = [];
+        var rowsi = rows[1].length;
+        while (rowsi--) {
+            var val = rows[1][rowsi].label
+            var tempQ = "select count(gis1."+tb+".`" + field1 + "` = a.`" + field1 + "`) as value from (select "+field1+" from gis1."+tb+" group by "+field1+") as a left join gis1." + tb + " on a."+ field1+"=gis1."+tb+"."+field1+" and gis1."+tb+"."+ field2 + " = '" + val + "' group by a." + field1 + " order by a." + field1;
+            console.log(tempQ);
+            var newPromise = queryAsync(tempQ).then(function(rows2) {
+                return {
+                    "seriesname": val,
+                    "data": rows2
+                };
+            })
+            seriesPromises.push(getData(tempQ,val));
+        }
+        return Promise.all(seriesPromises).then(function(dataset) {
+            result.dataset = dataset;
+            return result;
+        });
+    })
+}
+function getData(qstr,name){
+    return new Promise(function(resolve, reject) {
+        connection.query(qstr, function(err, rows) {
+            if (err) {
+                console.log(err);
+                reject(err);
+            }
+            resolve({
+                    "seriesname": name,
+                    "data": rows
+                });
+        });
+    })
+}
 function writeCsv(arr, csvPath) {
     var wstream = fs.createWriteStream(csvPath);
 
@@ -141,14 +185,13 @@ function writeCsv(arr, csvPath) {
 }
 
 router.get('/search?', function(req, res, next) {
-    var qstr1 = "select *, match (项目名称,项目进展情况,填海情况,填海超面积情况,海域使用上报情况,动态监测情况,违法情况,用海调整情况,调整上报情况,调整上报审批情况,确权发证情况,受益方上报情况,受益方上报审批情况) against('" + req.query.q + "') as relevance from gis1.projects order by relevance desc";
-    var qstr2 = "select *, match (配号来源,用海一级类,用海二级类,用海方式) against('" + req.query.q + "') as relevance from gis1.authorizing order by relevance desc";
-    console.log(qstr2);
+    var qstr1 = "select *, match (项目名称,项目进展情况,填海情况,填海超面积情况,海域使用上报情况,动态监测情况,违法情况,用海调整情况,调整上报情况,调整上报审批情况,确权发证情况,受益方上报情况,受益方上报审批情况) against('" + req.query.q + "') as relevance from gis1.projects  group by id having relevance > 0 order by relevance";
+    var qstr2 = "select *, match (配号来源,用海一级类,用海二级类,用海方式) against('" + req.query.q + "') as relevance from gis1.authorizing group by id having relevance > 0 order by relevance";
     Promise.all([queryAsync(qstr1), queryAsync(qstr2)]).then(function(rows) {
 
         var csvname = Date.now() + '_1.csv';
         var csvname1 = Date.now() + '_2.csv';
-        res.send({ rows: [rows[0].slice(0, 5), rows[1].slice(0, 5)], counts: [rows[0].length, rows[1].length], csvs: csvname + ',' + csvname1 });
+        res.send({ rows: [rows[0], rows[1]], csvs: csvname + ',' + csvname1 });
 
         writeCsv(rows[0], path.join(__dirname, '../public/csv/' + csvname));
         writeCsv(rows[1], path.join(__dirname, '../public/csv/' + csvname1));
@@ -160,8 +203,8 @@ router.get('/search?', function(req, res, next) {
 });
 
 router.post('/search?', function(req, res) {
-
-    var qstr = "select from gis1." + req.query.tb;
+    console.log(res.body);
+    var qstr = "select * from gis1." + req.query.tb;
     var nowhere = 1;
     var noand = 1;
     for (let key in req.body) {
@@ -169,25 +212,20 @@ router.post('/search?', function(req, res) {
             if (nowhere) {
                 qstr = qstr + " where";
                 nowhere = 0;
-            }
-            if (noand && !nowhere) {
+            } else {
                 qstr = qstr + " and";
-                noand = 0;
             }
             qstr = qstr + " `" + key + "` = '" + req.body[key] + "'";
         }
     }
-    qstr = qstr.substring(0, qstr.lastIndexOf(",")) + "where `id` = " + req.body.id;
     connection.query(qstr, function(err, rows) {
         if (err) {
             console.log(err);
         }
-        res.send({ ok: 1, id: req.body.id })
+        res.send(rows)
     });
 });
-router.post('/update', function(req, res, next) {
-    console.log(req.body);
-});
+
 
 router.get('/popup_content?', function(req, res, next) {
     var qstr = 'select * from authorizing where id = ' + req.query.id;
@@ -200,11 +238,6 @@ router.get('/popup_content?', function(req, res, next) {
     });
 });
 
-router.get('/download?', function(req, res, next) {
-    var csvPath = path.join(__dirname, '../csv/' + Date.now() + '.csv');
-    var wstream = fs.createWriteStream(csvPath);
-    return csvPath;
-});
 
 function generateProjDates() {
     queryAsync('select id from authorizing').then(function(ids) {
@@ -330,6 +363,7 @@ function getRandInt(probs) {
 }
 
 function queryAsync(qstr) {
+    console.log(qstr)
     return new Promise(function(resolve, reject) {
         connection.query(qstr, function(err, rows) {
             if (err) {
